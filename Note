@@ -1,0 +1,9 @@
+api weather =https://openweathermap.org/
+email = blh.braklihou18@gmail.com
+pass = A123456789
+api news = https://newsapi.org/
+email = blh.braklihou18@gmail.com
+pass = B123456789
+api unsplash = https://unsplash.com/
+email = blh.braklihou18@gmail.com
+pass = C123456789
