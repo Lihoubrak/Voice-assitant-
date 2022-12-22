@@ -195,15 +195,15 @@ def current_weather():
         # thời gian mặt trời
         suntime = data["sys"]
         # 	lúc mặt trời mọc, mặt trời mọc
-        sunrise = datetime.datetime.fromtimestamp(suntime["sunrise"])
+        sunrise = datetime.fromtimestamp(suntime["sunrise"])
         # lúc mặt trời lặn
-        sunset = datetime.datetime.fromtimestamp(suntime["sunset"])
+        sunset = datetime.fromtimestamp(suntime["sunset"])
         # thông tin thêm
         wthr = data["weather"]
         # mô tả thời tiết
         weather_description = wthr[0]["description"]
         # Lấy thời gian hệ thống cho vào biến now
-        now = datetime.datetime.now()
+        now = datetime.now()
         # hiển thị thông tin với người dùng
         content = f"""
         Hôm nay là ngày {now.day} tháng {now.month} năm {now.year}
