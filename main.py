@@ -6,6 +6,7 @@ import subprocess
 import time
 import urllib
 import webbrowser
+from _ast import operator
 from datetime import datetime
 from time import strftime
 import requests
@@ -21,9 +22,11 @@ def get_audio():
     robot_aer = sr.Recognizer()
     with sr.Microphone() as mic:  # dùng mic của máy để nghe người dùng nói
         print("Trợ lý ảo: đang nghe.....!")
-        audio = robot_aer.listen(mic, phrase_time_limit=5)  # truyền vào âm thanh thu dc từ mic vào biến audio, để bot nghe trong 5s
+        audio = robot_aer.listen(mic,
+                                 phrase_time_limit=5)  # truyền vào âm thanh thu dc từ mic vào biến audio, để bot nghe trong 5s
         try:  # nhận dạng giọng nói
-            text = robot_aer.recognize_google(audio, language="vi-VN")  # nhận dạng âm thanh ở biến audio chuyển thành văn bản
+            text = robot_aer.recognize_google(audio,
+                                              language="vi-VN")  # nhận dạng âm thanh ở biến audio chuyển thành văn bản
             print("Bạn: ", text)
             return text
         except:  # nếu lỗi
@@ -122,7 +125,7 @@ def open_app(text):
         os.startfile("C:\\Users\\Brak Lihou\\AppData\\Roaming\\Telegram Desktop\\Telegram.exe")
     elif "zalo" in text:
         speak(" mở ứng dụng zalo")
-        #subprocess.Popen("C:\\Users\\Brak Lihou\\AppData\\Local\\Programs\\Zalo\\Zalo.exe")
+        # subprocess.Popen("C:\\Users\\Brak Lihou\\AppData\\Local\\Programs\\Zalo\\Zalo.exe")
         os.startfile("C:\\Users\\Brak Lihou\\AppData\\Local\\Programs\\Zalo\\Zalo.exe")
     else:
         speak("ứng dụng chưa được cài đặt ạ :)")
@@ -170,20 +173,20 @@ def open_youtube_2():
     # webbrowser.get().open(url)
     pywhatkit.playonyt(search)
     speak(f'Đây là vi deo {search} mà bạn tìm kiếm trên youtube <..>')
-    print(result)
+
 
 def current_weather():
     speak("Bạn muốn xem thời tiết ở đâu ạ.")
-    ow_url = "http://api.openweathermap.org/data/2.5/weather?" # Đường dẫn trang web để lấy dữ liệu về thời tiết
-    city = get_text()   # lưu tên thành phố vào biến city
-    if not city:    # nếu biến city != 0 và = False thì để đấy ko xử lí gì cả
+    ow_url = "http://api.openweathermap.org/data/2.5/weather?"  # Đường dẫn trang web để lấy dữ liệu về thời tiết
+    city = get_text()  # lưu tên thành phố vào biến city
+    if not city:  # nếu biến city != 0 và = False thì để đấy ko xử lí gì cả
         pass
-    api_key = "3f300f13c74943b39afd7940eb0aa108"    # api_key lấy trên open weather map
-    call_url = ow_url + "appid=" + api_key + "&q=" + city + "&units=metric"      # tìm kiếm thông tin thời thời tiết của thành phố
+    api_key = "3f300f13c74943b39afd7940eb0aa108"  # api_key lấy trên open weather map
+    call_url = ow_url + "appid=" + api_key + "&q=" + city + "&units=metric"  # tìm kiếm thông tin thời thời tiết của thành phố
     # truy cập đường dẫn lấy dữ liệu thời tiết
-    response = requests.get(call_url) #gửi yêu cầu lấy dữ liệu
-    data = response.json()    # lưu dữ liệu thời tiết dưới dạng json và cho vào biến data
-    if data["cod"] != "404":     # kiểm tra nếu ko gặp lỗi 404 thì xem xét và lấy dữ liệu
+    response = requests.get(call_url)  # gửi yêu cầu lấy dữ liệu
+    data = response.json()  # lưu dữ liệu thời tiết dưới dạng json và cho vào biến data
+    if data["cod"] != "404":  # kiểm tra nếu ko gặp lỗi 404 thì xem xét và lấy dữ liệu
         # lấy dữ liệu của key main
         city_res = data["main"]
         # nhiệt độ hiện tại
@@ -219,6 +222,7 @@ def current_weather():
         speak("Không tìm thấy địa chỉ của bạn")
         current_weather()
 
+
 # url = 'https://api.unsplash.com/photos/random?client_id=' + \
 #       api_key
 def change_wallpaper():
@@ -233,8 +237,18 @@ def change_wallpaper():
     urllib.request.urlretrieve(photo, "G:\\OBS VIDEO\\a.png")  # tải về máy
     ctypes.windll.user32.SystemParametersInfoW(20, 0, "G:\\OBS VIDEO\\a.png", 3)
     speak("Hình nền máy tính bạn đã được thay đổi. Bạn ra home xem có đẹp không nha ?")
+    picture = get_text()
+    if 'không đẹp' in picture:
+        speak('Bạn muốn thay đổi lại phải không?')
+        again = get_text()
+        speak('Bạn cứ nói đi để tôi thay cho nhe')
+        if 'có' not in again:
+            change_wallpaper()
+    else:
+        pass
+
 def read_news():
-    #https://newsapi.org/v2/everything?q=th%E1%BB%83%20thao&apiKey=ef0edfb96bba4717b9da796b6ca7a152
+    # https://newsapi.org/v2/everything?q=th%E1%BB%83%20thao&apiKey=ef0edfb96bba4717b9da796b6ca7a152
     speak("Bạn muốn đọc báo về gì")
     queue = get_text()
     params = {'apiKey': 'ef0edfb96bba4717b9da796b6ca7a152', "q": queue, }
@@ -246,6 +260,8 @@ def read_news():
         print(f"Tin {number}:\nTiêu đề: {result['title']}\nTrích dẫn: {result['description']}\nLink: {result['url']}")
         if number <= 3:
             webbrowser.open(result['url'])
+
+
 def tell_me_about():
     try:
         speak("Bạn muốn nghe về gì ạ")
@@ -266,6 +282,7 @@ def tell_me_about():
     except:
         speak("Bot không định nghĩa được thuật ngữ của bạn. Xin mời bạn nói lại")
 
+
 def main_brain():
     speak("xin chào bạn tên là gì vậy ạ??")
     name = get_text()
@@ -284,14 +301,13 @@ def main_brain():
                 help_me()
             elif 'hiện tại' in text:
                 get_time(text)
-            elif 'mở' in text:
-                open_app(text)
-                if input("Để tiếp tục mở y/n: ") == "y":
-                    pass
-            elif 'mở.' in text:
-                open_web(text)
-                if input("Để tiếp tục mở y/n: ") == "y":
-                    pass
+            elif "mở" in text:
+                if "ứng dụng" in text:
+                    open_app(text)
+                    if input("Để tiếp tục y/n: ") == "y":
+                        pass
+                elif "." in text:
+                    open_web(text)
             elif "google" in text:
                 open_google_search()
             elif 'youtube' in text:
@@ -309,8 +325,12 @@ def main_brain():
                 current_weather()
             elif "hình nền" in text:
                 change_wallpaper()
+                if input("Để tiếp tục y/n: ") == "y":
+                    pass
             elif "đọc báo" in text:
                 read_news()
+                if input("Để tiếp tục y/n: ") == "y":
+                    pass
             elif "định nghĩa" in text:
                 tell_me_about()
             else:
